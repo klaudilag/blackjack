@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        int number = 0;
         Gracz krupier = new Gracz(0);
         System.out.println("Karty krupiera: ");
         Karta karta = new Karta("sample",0);
@@ -51,7 +50,6 @@ public class Main {
         while(!krupier.isended(krupier.getWynik())){
             kartyKrupiera.add(new Karta(karta.losowaniekart(),karta.getRealValue()));
             krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
-            number++;
         }
         for (Karta kartalist:kartyKrupiera) {
             System.out.println(kartalist);
@@ -71,7 +69,7 @@ public class Main {
         } else if(wynik == 0){
             System.out.println("remis!");
         } else {
-            System.out.println("przegrałeś o " + (wynik*(-1)));
+            System.out.println("wygrałeś o " + (wynik*(-1)) + " punkty!");
         }
     }
 }
@@ -89,9 +87,7 @@ class Karta{
         return"///////\n/     /\n/  "+value+"  /\n/     /\n///////";
     }
 
-    public String getValue() {
-        return value;
-    }
+
     public int getRealValue(){
         return realValue;
     }
@@ -99,12 +95,6 @@ class Karta{
     public void setRealValue(int realValue) {
         this.realValue = realValue;
     }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-
     public String losowaniekart(){
         String card = "";
         int randomNumber = 2 + (int)(Math.random() * ((14 - 2) + 1));
@@ -144,9 +134,7 @@ class Gracz{
     }
     public boolean isended(int wynikmain){
         boolean toEnd;
-        if (wynikmain <11 ){
-            toEnd = false;
-        }else if(wynikmain >=11&& wynikmain < 16){
+        if (wynikmain <16){
             toEnd = false;
         }
         else{
