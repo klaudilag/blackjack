@@ -7,6 +7,8 @@ public class Main {
         System.out.println("Karty krupiera: ");
         Karta karta = new Karta("sample",0);
         ArrayList<Karta> kartyKrupiera = new ArrayList<>();
+
+        //losowanie pierwszych dwóch kart dla krupiera
         for (int i = 0; i < 2; i++) {
             kartyKrupiera.add(new Karta(karta.losowaniekart(), karta.getRealValue()));
             krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
@@ -15,8 +17,14 @@ public class Main {
             System.out.println(kartalist);
         }
         System.out.println("wynik krupiera: " + krupier.getWynik());
+
+
+
         Gracz gracz = new Gracz(0);
         ArrayList<Karta> kartyGracza = new ArrayList<>();
+
+
+        //losowanie pierwszych dwóch kart dla gracza
         for (int i = 0; i < 2; i++) {
             kartyGracza.add(new Karta(karta.losowaniekart(), karta.getRealValue()));
             gracz.setWynik(gracz.getWynik()+ karta.getRealValue());
@@ -25,7 +33,13 @@ public class Main {
             System.out.println(kartalist);
         }
         System.out.println("Twój wynik: " + gracz.wynik);
+
+
+        //zmienna w celu wyjścia z pętli while
         int accept = 0;
+
+
+        //dobieranie karty przez użytkownika
         while (accept == 0){
             Scanner scanner = new Scanner(System.in);
             System.out.println("co chcesz zrobić? dobierz kartę = 1, zakończ = 2");
@@ -46,13 +60,12 @@ public class Main {
                 accept++;
             }
         }
+
+        //po turze użytkownika krupier losuje (lub nie) swoje karty
         System.out.println("teraz kolej krupiera!");
         while(!krupier.isended(krupier.getWynik())){
             kartyKrupiera.add(new Karta(karta.losowaniekart(),karta.getRealValue()));
             krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
-        }
-        for (Karta kartalist:kartyKrupiera) {
-            System.out.println(kartalist);
         }
         System.out.println("krupier dobrał " + (kartyKrupiera.size()-2));
         for (Karta kartalist:kartyKrupiera) {
@@ -63,6 +76,9 @@ public class Main {
             System.out.println("Krupier wylosował za wysoką wartość. Wygrałeś!");
             System.exit(0);
         }
+
+
+        //ostateczny wynik
         int wynik = krupier.getWynik() - gracz.getWynik();
         if(wynik > 0){
             System.out.println("krupier wygrał o " + wynik + " punkty!");
@@ -76,7 +92,7 @@ public class Main {
 class Karta{
     String value;
     int realValue;
-
+    //value - zmienna z wartością na karcie, realValue zmienna z wartością punktową karty w int.
     public Karta(String value, int realValue) {
         this.value = value;
         this.realValue = realValue;
