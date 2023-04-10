@@ -10,7 +10,7 @@ public class Main {
 
         //losowanie pierwszych dwóch kart dla krupiera
         for (int i = 0; i < 2; i++) {
-            kartyKrupiera.add(new Karta(karta.losowaniekart(), karta.getRealValue()));
+            kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()), karta.getRealValue()));
             krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
         }
         for (Karta kartalist:kartyKrupiera) {
@@ -26,7 +26,7 @@ public class Main {
 
         //losowanie pierwszych dwóch kart dla gracza
         for (int i = 0; i < 2; i++) {
-            kartyGracza.add(new Karta(karta.losowaniekart(), karta.getRealValue()));
+            kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
             gracz.setWynik(gracz.getWynik()+ karta.getRealValue());
         }
         for (Karta kartalist:kartyGracza) {
@@ -45,7 +45,7 @@ public class Main {
             System.out.println("co chcesz zrobić? dobierz kartę = 1, zakończ = 2");
             int decyzja = scanner.nextInt();
             if(decyzja == 1){
-                kartyGracza.add(new Karta(karta.losowaniekart(), karta.getRealValue()));
+                kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
                 gracz.setWynik(gracz.getWynik() + karta.getRealValue());
                 if (gracz.getWynik() > 21){
                     System.out.println("przegrałeś! Twój wynik to: " + gracz.getWynik());
@@ -64,7 +64,7 @@ public class Main {
         //po turze użytkownika krupier losuje (lub nie) swoje karty
         System.out.println("teraz kolej krupiera!");
         while(!krupier.isended(krupier.getWynik())){
-            kartyKrupiera.add(new Karta(karta.losowaniekart(),karta.getRealValue()));
+            kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()),karta.getRealValue()));
             krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
         }
         System.out.println("krupier dobrał " + (kartyKrupiera.size()-2));
@@ -91,6 +91,11 @@ public class Main {
 }
 class Karta{
     String value;
+
+    public String getValue() {
+        return value;
+    }
+
     int realValue;
     //value - zmienna z wartością na karcie, realValue zmienna z wartością punktową karty w int.
     public Karta(String value, int realValue) {
@@ -111,15 +116,19 @@ class Karta{
     public void setRealValue(int realValue) {
         this.realValue = realValue;
     }
-    public String losowaniekart(){
+    public String losowaniekart(int wynik){
         String card = "";
         int randomNumber = 2 + (int)(Math.random() * ((14 - 2) + 1));
         if (randomNumber >=2 && randomNumber<=10){
             setRealValue(randomNumber);
             card = Integer.toString(randomNumber);
         } else if (randomNumber == 11) {
-            setRealValue(1);
             card = "A";
+            if(wynik <=11){
+                setRealValue(10);
+            } else {
+                setRealValue(1);
+            }
         } else if (randomNumber == 12){
             setRealValue(10);
             card = "D";
