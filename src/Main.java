@@ -32,7 +32,7 @@ public class Main {
         for (Karta kartalist:kartyGracza) {
             System.out.println(kartalist);
         }
-        System.out.println("Twój wynik: " + gracz.wynik);
+        System.out.println("Twój wynik: " + gracz.getWynik());
 
 
         //zmienna w celu wyjścia z pętli while
@@ -72,7 +72,7 @@ public class Main {
             System.out.println(kartalist);
         }
         System.out.println("wynik krupiera: " + krupier.getWynik());
-        if (krupier.getWynik() > 22){
+        if (krupier.getWynik() > 21){
             System.out.println("Krupier wylosował za wysoką wartość. Wygrałeś!");
             System.exit(0);
         }
@@ -90,13 +90,13 @@ public class Main {
     }
 }
 class Karta{
-    String value;
+    private String value;
 
     public String getValue() {
         return value;
     }
 
-    int realValue;
+    private int realValue;
     //value - zmienna z wartością na karcie, realValue zmienna z wartością punktową karty w int.
     public Karta(String value, int realValue) {
         this.value = value;
@@ -144,7 +144,7 @@ class Karta{
     }
 }
 class Gracz{
-    int wynik;
+    private int wynik;
 
     public Gracz(int wynik) {
         this.wynik = wynik;
