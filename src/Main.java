@@ -3,90 +3,112 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Gracz krupier = new Gracz(0);
+        Gracz krupier = new Gracz(0,1000);
         System.out.println("Karty krupiera: ");
-        Karta karta = new Karta("sample",0);
+        Karta karta = new Karta("sample", 0);
         ArrayList<Karta> kartyKrupiera = new ArrayList<>();
-
-        //losowanie pierwszych dwóch kart dla krupiera
-        for (int i = 0; i < 2; i++) {
-            kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()), karta.getRealValue()));
-            krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
-        }
-        for (Karta kartalist:kartyKrupiera) {
-            System.out.println(kartalist);
-        }
-        System.out.println("wynik krupiera: " + krupier.getWynik());
-
-
-
-        Gracz gracz = new Gracz(0);
+        Gracz gracz = new Gracz(0,1000);
         ArrayList<Karta> kartyGracza = new ArrayList<>();
-
-
-        //losowanie pierwszych dwóch kart dla gracza
-        for (int i = 0; i < 2; i++) {
-            kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
-            gracz.setWynik(gracz.getWynik()+ karta.getRealValue());
-        }
-        for (Karta kartalist:kartyGracza) {
-            System.out.println(kartalist);
-        }
-        System.out.println("Twój wynik: " + gracz.getWynik());
-
-
-        //zmienna w celu wyjścia z pętli while
-        int accept = 0;
-
-
-        //dobieranie karty przez użytkownika
-        while (accept == 0){
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("co chcesz zrobić? dobierz kartę = 1, zakończ = 2");
-            int decyzja = scanner.nextInt();
-            if(decyzja == 1){
-                kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
-                gracz.setWynik(gracz.getWynik() + karta.getRealValue());
-                if (gracz.getWynik() > 21){
-                    System.out.println("przegrałeś! Twój wynik to: " + gracz.getWynik());
-                    System.exit(0);
+        boolean gameEnd = true;
+        boolean roundEnd = true;
+        game:
+        while (gameEnd) {
+            round:
+            while (roundEnd) {
+                //losowanie pierwszych dwóch kart dla krupiera
+                for (int i = 0; i < 2; i++) {
+                    kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()), karta.getRealValue()));
+                    krupier.setWynik(krupier.getWynik() + karta.getRealValue());
                 }
-                for (Karta kartalist:kartyGracza) {
+                for (Karta kartalist : kartyKrupiera) {
                     System.out.println(kartalist);
                 }
-                System.out.println("Twój wynik wynosi: " + gracz.getWynik());
+                System.out.println("wynik krupiera: " + krupier.getWynik());
 
-            } else {
-                accept++;
+
+                //losowanie pierwszych dwóch kart dla gracza
+                for (int i = 0; i < 2; i++) {
+                    kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
+                    gracz.setWynik(gracz.getWynik() + karta.getRealValue());
+                }
+                for (Karta kartalist : kartyGracza) {
+                    System.out.println(kartalist);
+                }
+                System.out.println("Twój wynik: " + gracz.getWynik());
+
+
+                //zmienna w celu wyjścia z pętli while
+                int accept = 0;
+
+
+                //dobieranie karty przez użytkownika
+                while (accept == 0) {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.println("co chcesz zrobić? dobierz kartę = 1, zakończ = 2");
+                    int decyzja = scanner.nextInt();
+                    if (decyzja == 1) {
+                        kartyGracza.add(new Karta(karta.losowaniekart(gracz.getWynik()), karta.getRealValue()));
+                        gracz.setWynik(gracz.getWynik() + karta.getRealValue());
+                        if (gracz.getWynik() > 21) {
+                            System.out.println("przegrałeś! Twój wynik to: " + gracz.getWynik());
+                            break round;
+                        }
+                        for (Karta kartalist : kartyGracza) {
+                            System.out.println(kartalist);
+                        }
+                        System.out.println("Twój wynik wynosi: " + gracz.getWynik());
+
+                    } else {
+                        accept++;
+                    }
+                }
+
+                //po turze użytkownika krupier losuje (lub nie) swoje karty
+                System.out.println("teraz kolej krupiera!");
+                while (!krupier.isended(krupier.getWynik())) {
+                    kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()), karta.getRealValue()));
+                    krupier.setWynik(krupier.getWynik() + karta.getRealValue());
+                }
+                System.out.println("krupier dobrał " + (kartyKrupiera.size() - 2));
+                for (Karta kartalist : kartyKrupiera) {
+                    System.out.println(kartalist);
+                }
+                System.out.println("wynik krupiera: " + krupier.getWynik());
+                if (krupier.getWynik() > 21) {
+                    System.out.println("Krupier wylosował za wysoką wartość. Wygrałeś!");
+                    break round;
+                }
+
+
+                //ostateczny wynik
+                int wynik = krupier.getWynik() - gracz.getWynik();
+                if (wynik > 0) {
+                    System.out.println("krupier wygrał o " + wynik + " punkty!");
+                } else if (wynik == 0) {
+                    System.out.println("remis!");
+                } else {
+                    System.out.println("wygrałeś o " + (wynik * (-1)) + " punkty!");
+                }
+                System.out.println("Koniec rundy.");
+                roundEnd = false;
             }
-        }
+                System.out.println("Czy chcesz kontynuować? 1 - tak, 2 - nie");
+                Scanner scanner1 = new Scanner(System.in);
+                int choice = scanner1.nextInt();
+                if (choice == 1) {
+                    gracz.setWynik(0);
+                    krupier.setWynik(0);
+                    kartyKrupiera.clear();
+                    kartyGracza.clear();
+                    roundEnd = true;
+                } else if (choice == 2) {
+                    break game;
+                } else {
+                    System.out.println("niepoprawny wybór. Zamykam grę.");
+                }
 
-        //po turze użytkownika krupier losuje (lub nie) swoje karty
-        System.out.println("teraz kolej krupiera!");
-        while(!krupier.isended(krupier.getWynik())){
-            kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()),karta.getRealValue()));
-            krupier.setWynik(krupier.getWynik()+ karta.getRealValue());
         }
-        System.out.println("krupier dobrał " + (kartyKrupiera.size()-2));
-        for (Karta kartalist:kartyKrupiera) {
-            System.out.println(kartalist);
-        }
-        System.out.println("wynik krupiera: " + krupier.getWynik());
-        if (krupier.getWynik() > 21){
-            System.out.println("Krupier wylosował za wysoką wartość. Wygrałeś!");
-            System.exit(0);
-        }
-
-
-        //ostateczny wynik
-        int wynik = krupier.getWynik() - gracz.getWynik();
-        if(wynik > 0){
-            System.out.println("krupier wygrał o " + wynik + " punkty!");
-        } else if(wynik == 0){
-            System.out.println("remis!");
-        } else {
-            System.out.println("wygrałeś o " + (wynik*(-1)) + " punkty!");
-        }
+        System.out.println("koniec gry.");
     }
 }
 class Karta{
@@ -145,9 +167,15 @@ class Karta{
 }
 class Gracz{
     private int wynik;
+    private int money;
 
-    public Gracz(int wynik) {
+    public Gracz(int wynik, int money) {
         this.wynik = wynik;
+        this.money = money;
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     public int getWynik() {
