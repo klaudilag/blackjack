@@ -11,10 +11,17 @@ public class Main {
         ArrayList<Karta> kartyGracza = new ArrayList<>();
         boolean gameEnd = true;
         boolean roundEnd = true;
+        System.out.println("rozpoczynam grę!");
         game:
         while (gameEnd) {
+            System.out.println("Pieniądze gracza: " + gracz.getMoney() + "PLN");
+            System.out.println("Pieniądze krupiera: " + krupier.getMoney() + "PLN");
             round:
             while (roundEnd) {
+                System.out.println("Ile chcesz postawić w tej rundzie?");
+                Scanner scannerMoney = new Scanner(System.in);
+                int betMoney = scannerMoney.nextInt();
+                System.out.println("Postawiłeś " + betMoney + " PLN");
                 //losowanie pierwszych dwóch kart dla krupiera
                 for (int i = 0; i < 2; i++) {
                     kartyKrupiera.add(new Karta(karta.losowaniekart(krupier.getWynik()), karta.getRealValue()));
@@ -51,6 +58,8 @@ public class Main {
                         gracz.setWynik(gracz.getWynik() + karta.getRealValue());
                         if (gracz.getWynik() > 21) {
                             System.out.println("przegrałeś! Twój wynik to: " + gracz.getWynik());
+                            gracz.setMoney(gracz.getMoney()-betMoney);
+                            krupier.setMoney(krupier.getMoney()+betMoney);
                             break round;
                         }
                         for (Karta kartalist : kartyGracza) {
@@ -76,6 +85,8 @@ public class Main {
                 System.out.println("wynik krupiera: " + krupier.getWynik());
                 if (krupier.getWynik() > 21) {
                     System.out.println("Krupier wylosował za wysoką wartość. Wygrałeś!");
+                    gracz.setMoney(gracz.getMoney()+betMoney);
+                    krupier.setMoney(krupier.getMoney()-betMoney);
                     break round;
                 }
 
@@ -84,12 +95,19 @@ public class Main {
                 int wynik = krupier.getWynik() - gracz.getWynik();
                 if (wynik > 0) {
                     System.out.println("krupier wygrał o " + wynik + " punkty!");
+                    gracz.setMoney(gracz.getMoney()-betMoney);
+                    krupier.setMoney(krupier.getMoney()+betMoney);
                 } else if (wynik == 0) {
                     System.out.println("remis!");
                 } else {
                     System.out.println("wygrałeś o " + (wynik * (-1)) + " punkty!");
+                    gracz.setMoney(gracz.getMoney()+betMoney);
+                    krupier.setMoney(krupier.getMoney()-betMoney);
                 }
                 System.out.println("Koniec rundy.");
+                System.out.println("Twój kapitał: " + gracz.getMoney() + "PLN");
+                System.out.println("Kapitał krupiera: " + krupier.getMoney() + "PLN");
+
                 roundEnd = false;
             }
                 System.out.println("Czy chcesz kontynuować? 1 - tak, 2 - nie");
@@ -105,6 +123,7 @@ public class Main {
                     break game;
                 } else {
                     System.out.println("niepoprawny wybór. Zamykam grę.");
+                    break game;
                 }
 
         }
@@ -176,6 +195,10 @@ class Gracz{
 
     public int getMoney() {
         return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public int getWynik() {
